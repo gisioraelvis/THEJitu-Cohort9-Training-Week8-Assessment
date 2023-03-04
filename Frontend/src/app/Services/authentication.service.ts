@@ -14,6 +14,14 @@ export class AuthenticationService {
   }
 
   loginUser(user: LoginUser): Observable<LoginSuccess> {
-    return this.http.post<LoginSuccess>(`${API_URL}/auth/login`, user);
+    const { Email, Password } = user;
+    return this.http.post<LoginSuccess>(`${API_URL}/auth/login`, {
+      Email,
+      Password,
+    });
+  }
+
+  updateProfile(user: User): Observable<User> {
+    return this.http.put<User>(`${API_URL}/auth/update-profile`, user);
   }
 }

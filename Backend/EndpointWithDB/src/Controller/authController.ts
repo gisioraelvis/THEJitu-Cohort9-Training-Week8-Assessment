@@ -68,14 +68,12 @@ export async function loginUser(req: ExtendedRequest, res: Response) {
     const token = jwt.sign(payload[0], process.env.SECRETKEY as string, {
       expiresIn: "3600s",
     });
-    return res
-      .status(200)
-      .json({
-        message: "User Loggedin!!!",
-        token,
-        role: user[0].Role,
-        name: user[0].Name,
-      });
+    return res.status(200).json({
+      message: "User Loggedin!!!",
+      token,
+      role: user[0].Role,
+      name: user[0].Name,
+    });
   } catch (error) {
     res.status(500).json(error);
   }

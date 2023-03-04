@@ -1,0 +1,16 @@
+<h1>Profile</h1>
+<form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+    <div>
+        <label for="name">Name:</label>
+        <input id="name" type="text" formControlName="name" />
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input id="email" type="email" formControlName="email" />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input id="password" type="password" formControlName="password" />
+    </div>
+    <button type="submit">Update Profile</button>
+</form>

@@ -8,6 +8,9 @@ import {
 } from '@angular/forms';
 import { AuthenticationService } from 'src/app/Services/authentication.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/State/appState';
+import { register } from 'src/app/State/Actions/user.actions';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +23,7 @@ export class RegisterComponent implements OnInit {
   form!: FormGroup;
   constructor(
     private fb: FormBuilder,
-    private authentication: AuthenticationService,
+    private store: Store<AppState>,
     private router: Router
   ) {}
   ngOnInit(): void {
@@ -30,10 +33,20 @@ export class RegisterComponent implements OnInit {
       Password: [null, Validators.required],
     });
   }
+  // submitForm() {
+  //   this.authentication.registerUser(this.form.value).subscribe((response) => {
+  //     console.log(response);
+  //     this.router.navigate(['login']);
+  //   });
+  // }
+
   submitForm() {
-    this.authentication.registerUser(this.form.value).subscribe((response) => {
-      console.log(response);
-      this.router.navigate(['login']);
-    });
+    const payload = {
+      Name: this.form.get('Name')?.value,
+      Email: this.form.get('Email')?.value,
+      Password: this.form.get('Password')?.value,
+    };
+    this.store.dispatch(register(payload));
+    this.router.navigate(['login']);
   }
 }

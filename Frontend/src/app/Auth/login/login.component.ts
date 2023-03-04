@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/State/appState';
 import { login } from 'src/app/State/Actions/user.actions';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -21,7 +22,11 @@ export class LoginComponent implements OnInit {
   form!: FormGroup;
   error: string | null;
 
-  constructor(private fb: FormBuilder, private store: Store<AppState>) {
+  constructor(
+    private fb: FormBuilder,
+    private store: Store<AppState>,
+    private router: Router
+  ) {
     this.error = null;
   }
 
@@ -39,6 +44,7 @@ export class LoginComponent implements OnInit {
     };
 
     this.store.dispatch(login(payload));
+    this.router.navigate(['book']);
   }
 
   Close() {

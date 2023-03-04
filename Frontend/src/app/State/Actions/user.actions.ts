@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { LoginUser } from 'src/app/Interfaces';
+import { LoginUser, User } from 'src/app/Interfaces';
 
 export const login = createAction(
   '[User] Login',
@@ -20,7 +20,7 @@ export const logout = createAction('[Auth] Logout');
 
 export const register = createAction(
   '[User] Register',
-  props<{ name: string; email: string; password: string }>()
+  props<User>()
 );
 
 export const registerSuccess = createAction(

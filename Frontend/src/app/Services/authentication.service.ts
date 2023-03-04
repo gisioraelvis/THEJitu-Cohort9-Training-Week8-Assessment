@@ -10,7 +10,8 @@ export class AuthenticationService {
   constructor(private http: HttpClient) {}
 
   registerUser(user: User): Observable<Message> {
-    return this.http.post<Message>(`${API_URL}/auth/register`, user);
+    const { Name, Email, Password } = user;
+    return this.http.post<Message>(`${API_URL}/auth/register`, {Name, Email, Password});
   }
 
   loginUser(user: LoginUser): Observable<LoginSuccess> {

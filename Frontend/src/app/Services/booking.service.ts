@@ -1,37 +1,33 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { API_URL } from 'src/constants';
 import { AddBooking, Booking, Message } from '../Interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BookingService {
+  constructor(private http: HttpClient) {}
+  booking$ = new Subject<Booking[]>();
 
-  constructor( private http:HttpClient) { }
-  booking$=new Subject<Booking[]>()
-
-  addBooking(booking:AddBooking):Observable<Message>{
-    return this.http.post<Message>('http://localhost:4000/flights',booking)
-  }
-  
-  getUserBooking():Observable<Booking[]>{
-    return this.http.get<Booking[]>('http://localhost:4000/flights/booking/emails');
+  addBooking(booking: AddBooking): Observable<Message> {
+    return this.http.post<Message>(`${API_URL}/flights`, booking);
   }
 
-  getOneBooking(id:string):Observable<Booking>{
-   return  this.http.get<Booking>(`http://localhost:4000/flights/${id}`)
+  getUserBooking(): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${API_URL}/flights/booking/emails`);
   }
 
-  deleteBooking(id:string):Observable<Message>{
-    return  this.http.delete<Message>(`http://localhost:4000/flights/${id}`)
-   }
+  getOneBooking(id: string): Observable<Booking> {
+    return this.http.get<Booking>(`${API_URL}/flights/${id}`);
+  }
 
-   updateBooking(id:string,updatedBooking:AddBooking):Observable<Booking>{
-    return  this.http.put<Booking>(`http://localhost:4000/flights/${id}`, updatedBooking)
-   }
- 
- 
+  deleteBooking(id: string): Observable<Message> {
+    return this.http.delete<Message>(`${API_URL}/flights/${id}`);
+  }
 
-
+  updateBooking(id: string, updatedBooking: AddBooking): Observable<Booking> {
+    return this.http.put<Booking>(`${API_URL}/flights/${id}`, updatedBooking);
+  }
 }

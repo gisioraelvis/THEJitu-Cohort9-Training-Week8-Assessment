@@ -1,6 +1,10 @@
 import { RequestHandler, Request, Response } from "express";
 import { v4 as uid } from "uuid";
-import { LoginSchema, RegistrationSchema } from "../Helpers";
+import {
+  LoginSchema,
+  ProfileUpdateSchema,
+  RegistrationSchema,
+} from "../Helpers";
 import { DecodedData, User } from "../Models";
 import Bcrypt from "bcrypt";
 import dotenv from "dotenv";
@@ -78,6 +82,38 @@ export async function loginUser(req: ExtendedRequest, res: Response) {
     res.status(500).json(error);
   }
 }
+
+export const updateProfile: RequestHandler = async (
+  req: ExtendedRequest,
+  res
+) => {
+  try {
+    const { Name, Email, Password } = req.body;
+    const { error } = ProfileUpdateSchema.validate(req.body);
+    if (error) {
+      return res.status(422).json(error.details[0].message);
+    }
+
+    const user: User[] = await (
+      await _db.exec("getUserByEmail", { email: Email })
+    ).recordset;
+
+    if (user[0]) {
+      return res.status(409).json({ error: "Email already registered" });
+    }
+
+    const hashedPassword = await Bcrypt.hash(Password, 10);
+    await _db.exec("updateProfile", {
+      id: req.info!.Id,
+      name: Name,
+      email: Email,
+      password: hashedPassword,
+    });
+    return res.status(201).json({ message: "User Updated" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
 
 export async function Homepage(req: ExtendedRequest, res: Response) {
   try {

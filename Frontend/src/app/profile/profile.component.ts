@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, Observable } from 'rxjs';
 import * as UserSelectors from '../State/selectors/user.selector';
 import * as UserActions from '../State/Actions/user.actions';
 
@@ -11,8 +10,8 @@ import {
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 import { User } from '../Interfaces';
-import { UserState } from '../State/Reducers/user.reducer';
 
 @Component({
   standalone: true,
@@ -22,23 +21,23 @@ import { UserState } from '../State/Reducers/user.reducer';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  user$?: Observable<UserState>;
+  user$?: Observable<User>;
   profileForm!: FormGroup;
 
   constructor(private store: Store, private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    this.user$ = this.store.select(UserSelectors.selectUser);
+    this.user$ = this.store.select(UserSelectors.currentUser);
     this.profileForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    this.user$.subscribe((userState) => {
+    this.user$.subscribe((user) => {
       this.profileForm.patchValue({
-        name: userState.user?.Name,
-        email: userState.user?.Email,
+        name: user.Name,
+        email: user.Email,
         password: '',
       });
     });

@@ -1,14 +1,11 @@
 import { createAction, props } from '@ngrx/store';
-import { LoginUser, User } from 'src/app/Interfaces';
+import { LoginSuccess, LoginUser, User } from 'src/app/Interfaces';
 
-export const login = createAction(
-  '[User] Login',
-  props<LoginUser>()
-);
+export const login = createAction('[User] Login', props<LoginUser>());
 
 export const loginSuccess = createAction(
   '[User] Login Success',
-  props<{ user: any }>()
+  props<LoginSuccess>()
 );
 
 export const loginFailure = createAction(
@@ -18,14 +15,11 @@ export const loginFailure = createAction(
 
 export const logout = createAction('[Auth] Logout');
 
-export const register = createAction(
-  '[User] Register',
-  props<User>()
-);
+export const register = createAction('[User] Register', props<User>());
 
 export const registerSuccess = createAction(
   '[User] Register Success',
-  props<{ user: any }>()
+  props<{ message: string }>()
 );
 
 export const registerFailure = createAction(
@@ -47,12 +41,12 @@ export const loadProfileFailure = createAction(
 
 export const updateProfile = createAction(
   '[User] Update Profile',
-  props<{ user: any }>()
+  props<User>()
 );
 
 export const updateProfileSuccess = createAction(
   '[User] Update Profile Success',
-  props<{ user: any }>()
+  props<{ message: string }>()
 );
 
 export const updateProfileFailure = createAction(

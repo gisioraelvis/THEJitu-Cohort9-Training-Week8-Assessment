@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, mergeMap, catchError } from 'rxjs/operators';
+import { map, mergeMap, catchError, concatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/Services/authentication.service';
 import * as UserActions from '../Actions/user.actions';
@@ -13,39 +13,64 @@ export class UserEffects {
     private authService: AuthenticationService
   ) {}
 
-  login$ = createEffect(() =>
-    this.actions$.pipe(
+  login$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(UserActions.login),
-      mergeMap((user: LoginUser) =>
-        this.authService.loginUser(user).pipe(
-          map((user) => UserActions.loginSuccess({ user })),
-          catchError((error) => of(UserActions.loginFailure({ error })))
-        )
-      )
-    )
-  );
+      mergeMap((action: LoginUser) => {
+        const { Email, Password } = action;
+        return this.authService.loginUser({ Email, Password }).pipe(
+          map((successResponse: any) => {
+            localStorage.setItem('token', successResponse.token);
+            return UserActions.loginSuccess({
+              message: successResponse.message,
+              token: successResponse.token,
+              role: successResponse.role,
+              name: successResponse.name,
+            });
+          }),
+          catchError((error) =>
+            of(UserActions.loginFailure({ error: error.message }))
+          )
+        );
+      })
+    );
+  });
 
-  register$ = createEffect(() =>
-    this.actions$.pipe(
+  register$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(UserActions.register),
-      mergeMap((user: any) =>
-        this.authService.registerUser(user).pipe(
-          map((user) => UserActions.registerSuccess({ user })),
-          catchError((error) => of(UserActions.registerFailure({ error })))
-        )
-      )
-    )
-  );
+      concatMap((action: User) => {
+        const { Name, Email, Password } = action;
+        return this.authService.registerUser({ Name, Email, Password }).pipe(
+          map(() => {
+            return UserActions.registerSuccess({
+              message: 'User Registered Successfully',
+            });
+          }),
+          catchError((error) =>
+            of(UserActions.registerFailure({ error: error.message }))
+          )
+        );
+      })
+    );
+  });
 
-  updateProfile$ = createEffect(() =>
-    this.actions$.pipe(
+  updateProfile$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(UserActions.updateProfile),
-      mergeMap((user: any) =>
-        this.authService.updateProfile(user).pipe(
-          map((user) => UserActions.updateProfileSuccess({ user })),
-          catchError((error) => of(UserActions.updateProfileFailure({ error })))
-        )
-      )
-    )
-  );
+      concatMap((action: User) => {
+        const { Name, Email, Password } = action;
+        return this.authService.updateProfile({ Name, Email, Password }).pipe(
+          map(() => {
+            return UserActions.updateProfileSuccess({
+              message: 'User Profile Updated Successfully',
+            });
+          }),
+          catchError((error) =>
+            of(UserActions.updateProfileFailure({ error: error.message }))
+          )
+        );
+      })
+    );
+  });
 }

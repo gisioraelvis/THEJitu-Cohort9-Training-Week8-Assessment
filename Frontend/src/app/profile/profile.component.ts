@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
           ...user,
           ...this.profileForm.value,
         };
-        this.store.dispatch(UserActions.updateProfile({ user: updatedUser }));
+        this.store.dispatch(UserActions.updateProfile(updatedUser));
       });
     }
   }

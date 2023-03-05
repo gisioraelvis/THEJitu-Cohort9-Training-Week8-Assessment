@@ -6,7 +6,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthenticationService } from 'src/app/Services/authentication.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/State/appState';
@@ -33,12 +32,6 @@ export class RegisterComponent implements OnInit {
       Password: [null, Validators.required],
     });
   }
-  // submitForm() {
-  //   this.authentication.registerUser(this.form.value).subscribe((response) => {
-  //     console.log(response);
-  //     this.router.navigate(['login']);
-  //   });
-  // }
 
   submitForm() {
     const payload = {

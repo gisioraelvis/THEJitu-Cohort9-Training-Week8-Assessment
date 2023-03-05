@@ -1,31 +1,61 @@
 import { createReducer, createSelector, on } from '@ngrx/store';
-import { User } from 'src/app/Interfaces';
-import {
-  loadProfile,
-  loginFailure,
-  loginSuccess,
-  logout,
-  registerSuccess,
-  updateProfileSuccess,
-} from '../Actions/user.actions';
+import { LoginSuccess, User } from 'src/app/Interfaces';
+import * as UserActions from '../Actions/user.actions';
 
 export interface UserState {
-  loggedInUser: User | null;
+  user: User;
+  error: string;
+  loginSuccess: LoginSuccess;
+  loginError: string;
+  registerSuccess: string;
+  registerError: string;
+  updateSuccess: string;
+  updateError: string;
 }
 
-export const initialState: UserState = {
-  loggedInUser: null,
+const initialState: UserState = {
+  user: {
+    Name: '',
+    Email: '',
+    Password: '',
+  },
+  error: '',
+  loginSuccess: {
+    message: '',
+    token: '',
+    role: '',
+    name: '',
+  },
+  loginError: '',
+  registerSuccess: '',
+  registerError: '',
+  updateSuccess: '',
+  updateError: '',
 };
 
 export const userReducer = createReducer(
   initialState,
-  on(loginSuccess, (state, { user }) => ({ ...state, loggedInUser: user })),
-  on(loginFailure, (state, { error }) => ({ ...state, error })),
-  on(registerSuccess, (state, { user }) => ({ ...state, loggedInUser: user })),
-  on(loadProfile, (state) => ({ ...state, loggedInUser: state.loggedInUser })),
-  on(updateProfileSuccess, (state, { user }) => ({
+  on(UserActions.loginSuccess, (state, user) => ({
     ...state,
     loggedInUser: user,
   })),
-  on(logout, (state) => ({ ...state, initialState }))
+  on(UserActions.loginFailure, (state, { error }) => ({ ...state, error })),
+  on(UserActions.registerSuccess, (state, user) => ({
+    ...state,
+    loggedInUser: user,
+  })),
+  on(UserActions.registerFailure, (state, { error }) => ({ ...state, error })),
+  on(UserActions.loadProfile, (state) => ({
+    ...state,
+    loggedInUser: state.user,
+  })),
+  on(UserActions.loadProfileSuccess, (state, { user }) => ({
+    ...state,
+    loggedInUser: user,
+  })),
+  on(UserActions.updateProfileSuccess, (state, user) => ({
+    ...state,
+    loggedInUser: user,
+  })),
+  on(UserActions.logout, (state) => ({ ...state, initialState }))
 );

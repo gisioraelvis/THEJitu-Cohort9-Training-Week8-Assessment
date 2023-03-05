@@ -5,12 +5,14 @@ import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/Services/authentication.service';
 import * as UserActions from '../Actions/user.actions';
 import { LoginUser, User } from 'src/app/Interfaces';
+import { AuthService } from 'src/app/Services/auth.service';
 
 @Injectable()
 export class UserEffects {
   constructor(
     private actions$: Actions,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private auth: AuthService
   ) {}
 
   login$ = createEffect(() => {
@@ -21,6 +23,7 @@ export class UserEffects {
         return this.authService.loginUser({ Email, Password }).pipe(
           map((successResponse: any) => {
             localStorage.setItem('token', successResponse.token);
+            this.auth.isLoggedIn = true;
             return UserActions.loginSuccess({
               message: successResponse.message,
               token: successResponse.token,

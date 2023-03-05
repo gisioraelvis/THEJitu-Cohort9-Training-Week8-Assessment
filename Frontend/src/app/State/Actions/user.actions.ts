@@ -31,7 +31,7 @@ export const loadProfile = createAction('[User] Load User Profile');
 
 export const loadProfileSuccess = createAction(
   '[User] Load User Profile Success',
-  props<{ user: any }>()
+  props<User>()
 );
 
 export const loadProfileFailure = createAction(

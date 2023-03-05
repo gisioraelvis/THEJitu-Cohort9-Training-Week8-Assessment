@@ -49,7 +49,7 @@ export const userReducer = createReducer(
     ...state,
     loggedInUser: state.user,
   })),
-  on(UserActions.loadProfileSuccess, (state, { user }) => ({
+  on(UserActions.loadProfileSuccess, (state, user) => ({
     ...state,
     loggedInUser: user,
   })),

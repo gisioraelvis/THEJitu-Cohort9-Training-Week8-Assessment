@@ -1,18 +1,21 @@
-<div>
-    <h1>Profile</h1>
+<div class="container">
+    <h1>Update Profile</h1>
     <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
-        <div>
-            <label for="name">Name:</label>
-            <input id="name" type="text" formControlName="name" />
+        <div class="FormControl">
+            <label htmlFor="name">Name:</label>
+            <input type="text" formControlName="name" />
         </div>
-        <div>
-            <label for="email">Email:</label>
-            <input id="email" type="email" formControlName="email" />
+
+        <div class="FormControl">
+            <label htmlFor="name">Email:</label>
+            <input type="email" formControlName="email" />
         </div>
-        <div>
-            <label for="password">Password:</label>
-            <input id="password" type="password" formControlName="password" />
+        <div class="FormControl">
+            <label htmlFor="name">Password:</label>
+            <input type="password" formControlName="password" />
         </div>
-        <button type="submit">Update Profile</button>
+        <div class="FormControl">
+            <button type="submit" class="btn">Update Profile</button>
+        </div>
     </form>
 </div>

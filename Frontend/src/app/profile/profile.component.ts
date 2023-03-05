@@ -12,6 +12,7 @@ import {
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { User } from '../Interfaces';
+import { UserState } from '../State/Reducers/user.reducer';
 
 @Component({
   standalone: true,
@@ -21,26 +22,23 @@ import { User } from '../Interfaces';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  user$!: Observable<User | null>;
+  user$?: Observable<UserState>;
   profileForm!: FormGroup;
 
   constructor(private store: Store, private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    this.user$ = this.store
-      .select(UserSelectors.selectUser)
-      .pipe(filter((user) => user !== null));
-
+    this.user$ = this.store.select(UserSelectors.selectUser);
     this.profileForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    this.user$.subscribe((user) => {
+    this.user$.subscribe((userState) => {
       this.profileForm.patchValue({
-        name: user?.Name || '',
-        email: user?.Email || '',
+        name: userState.user?.Name,
+        email: userState.user?.Email,
         password: '',
       });
     });
@@ -48,13 +46,13 @@ export class ProfileComponent implements OnInit {
 
   onUpdateProfile() {
     if (this.profileForm.valid) {
-      this.user$.pipe(filter((user) => user !== null)).subscribe((user) => {
-        const updatedUser: User = {
-          ...user,
-          ...this.profileForm.value,
-        };
-        this.store.dispatch(UserActions.updateProfile(updatedUser));
-      });
+      this.store.dispatch(
+        UserActions.updateProfile({
+          Name: this.profileForm.value.name,
+          Email: this.profileForm.value.email,
+          Password: this.profileForm.value.password,
+        })
+      );
     }
   }
 }
